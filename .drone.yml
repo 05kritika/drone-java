@@ -24,4 +24,24 @@ pipeline:
    
     when:
       branch: master
+      
+ deploy:
+    image: google/cloud-sdk:latest
+    environment:
+      PROJECT_ID: dronekubernetes
+      COMPUTE_ZONE: us-east4-a
+      CLUSTER_NAME: drone
+    secrets: [GOOGLE_CREDENTIALS]
+    commands:
+      - echo "$GOOGLE_KEY" > drone-sa-keyfile.json
+      - gcloud config set project $PROJECT_ID
+      - gcloud config set compute/zone $COMPUTE_ZONE
+      - gcloud auth activate-service-account --key-file drone-sa-keyfile.json
+      - gcloud container clusters get-credentials $CLUSTER_NAME
+     # - kubectl set image deployment/dronekubernetes dronekubernetes=eu.gcr.io/${PROJECT_ID}/app:commit_${DRONE_COMMIT}
+      - kubectl run drone-java-pipeline --image=eu.gcr.io/dronekubernetes/drone-java:commit_${DRONE_COMMIT}
+      - kubectl expose deployment drone-java-pipeline --type=NodePort --port=80 --target-port=8080 --name=drone-java-pipeline-service
+    when:
+      branch: master		
+
 

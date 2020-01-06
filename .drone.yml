@@ -25,7 +25,7 @@ pipeline:
     when:
       branch: master
       
- deploy:
+  deploy:
     image: google/cloud-sdk:latest
     environment:
       PROJECT_ID: dronekubernetes

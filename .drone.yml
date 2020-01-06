@@ -33,7 +33,7 @@ pipeline:
       CLUSTER_NAME: drone
     secrets: [GOOGLE_CREDENTIALS]
     commands:
-      - echo "$GOOGLE_KEY" > drone-sa-keyfile.json
+      - echo "$GOOGLE_CREDENTIALS" > drone-sa-keyfile.json
       - gcloud config set project $PROJECT_ID
       - gcloud config set compute/zone $COMPUTE_ZONE
       - gcloud auth activate-service-account --key-file drone-sa-keyfile.json

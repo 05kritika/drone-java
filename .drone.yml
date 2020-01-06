@@ -1,8 +1,27 @@
+#pipeline:
+#  build:	  
+#    image: maven:3-jdk-8
+#    commands: 
+#      - "mvn package -B"
+#    artifacts:
+#      paths:
+#        - target/*.jar
+        
 pipeline:
   build:	  
     image: maven:3-jdk-8
     commands: 
-      - "mvn package -B"
+	  - "mvn package -B"
     artifacts:
       paths:
         - target/*.jar
+  gcr:
+    image: plugins/gcr
+    registry: eu.gcr.io
+    repo: dronekubernetes/drone-java
+    tags: ["commit_${DRONE_COMMIT}","build_${DRONE_BUILD_NUMBER}", "latest"]
+    secrets: [GOOGLE_CREDENTIALS]
+   
+    when:
+      branch: master
+

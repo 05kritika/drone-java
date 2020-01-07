@@ -33,7 +33,8 @@ pipeline:
       CLUSTER_NAME: drone
     secrets: [GOOGLE_CREDENTIALS]
     commands:
-      - echo "$GOOGLE_CREDENTIALS" > drone.json
+      #- echo "$GOOGLE_CREDENTIALS" > drone.json
+      - cp "$GOOGLE_CREDENTIALS" drone.json
       - cat drone.json
       - gcloud config set project $PROJECT_ID
       - gcloud config set compute/zone $COMPUTE_ZONE

@@ -33,13 +33,15 @@ pipeline:
       CLUSTER_NAME: drone
     secrets: [GOOGLE_CREDENTIALS]
     commands:
-      - echo "$GOOGLE_CREDENTIALS" > drone.json
+      - yes | apt-get install python3
+      - python3 generate_key.py drone-sa-keyfile.json
+      #- echo "$GOOGLE_CREDENTIALS" > drone.json
       #- cp "$GOOGLE_CREDENTIALS" drone.json
-      - cat drone.json
-      - gcloud auth activate-service-account --key-file drone.json
+      #- cat drone.json
+      - gcloud auth activate-service-account --key-file drone-sa-keyfile.json
       - gcloud config set project $PROJECT_ID
       - gcloud config set compute/zone $COMPUTE_ZONE
-      - gcloud auth activate-service-account drone-sa@dronekubernetes.iam.gserviceaccount.com --key-file drone.json
+      #- gcloud auth activate-service-account drone-sa@dronekubernetes.iam.gserviceaccount.com --key-file drone.json
       - gcloud container clusters get-credentials $CLUSTER_NAME
      # - kubectl set image deployment/dronekubernetes dronekubernetes=eu.gcr.io/${PROJECT_ID}/app:commit_${DRONE_COMMIT}
       - kubectl run drone-java-pipeline --image=eu.gcr.io/dronekubernetes/drone-java:commit_${DRONE_COMMIT}

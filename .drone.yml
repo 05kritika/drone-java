@@ -44,8 +44,11 @@ pipeline:
       #- gcloud auth activate-service-account drone-sa@dronekubernetes.iam.gserviceaccount.com --key-file drone.json
       - gcloud container clusters get-credentials $CLUSTER_NAME
      # - kubectl set image deployment/dronekubernetes dronekubernetes=eu.gcr.io/${PROJECT_ID}/app:commit_${DRONE_COMMIT}
-      - kubectl run drone-java-pipeline --image=eu.gcr.io/dronekubernetes/drone-java:commit_${DRONE_COMMIT}
-      - kubectl expose deployment drone-java-pipeline --type=NodePort --port=80 --target-port=8080 --name=drone-java-pipeline-service
+     # - kubectl run drone-java-pipeline --image=eu.gcr.io/dronekubernetes/drone-java:commit_${DRONE_COMMIT}
+     # - kubectl expose deployment drone-java-pipeline --type=NodePort --port=80 --target-port=8080 --name=drone-java-pipeline-service
+    
+      - kubectl delete deployment drone-java-pipeline    
+      - kubectl delete service drone-java-pipeline-service
     when:
       branch: master		
 
